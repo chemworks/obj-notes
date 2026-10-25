@@ -180,4 +180,4 @@ Tamaño desde cero: **M** [Suposición], unas 4 a 8 semanas para una persona con
 
 Tamaño con fork de Anytype: **S-M** [Suposición]. El trabajo nuevo es el motor de fórmulas y los rollups, pero hay que aprender dos bases de código grandes (TypeScript + Go) y mantener el fork al día con upstream.
 
-Siguiente paso: `/replica-architect` para elegir stack y esquema.
+Siguiente paso: decidido el 2026-10-25 partir del fork de Anytype. El plan está en `docs/fork-plan.md`.
