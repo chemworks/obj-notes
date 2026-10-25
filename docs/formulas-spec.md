@@ -46,6 +46,8 @@ join(rel("Tareas", "Nombre"), ", ")
 - Listas y relaciones: `rel`, `len`, `count(lista, condición)`, `sum`, `avg`, `min`, `max`, `earliest`, `latest`, `first`, `last`, `join`, `filter`, `map`, `uniq`.
 - Implementado el 2026-10-25 en `core/formula` (rama `GO-0000-obj-notes-formula-engine` de `chemworks/anytype-heart`), con tests de cada función.
 
+- `children("Relación", "Propiedad")` (agregada 2026-10-25): lee la propiedad de los objetos cuya Relación apunta a este objeto. Así un Proyecto suma las Tareas que tienen Proyecto = él, sin cargar una lista en el proyecto. Excluye archivados. Una sola consulta al índice: 3,2 ms para 1.000 tareas, contra 11 ms por fórmula con `rel()`. Si una tarea se mueve de proyecto, se recalculan el proyecto viejo y el nuevo (el viejo solo mientras el middleware siga corriendo desde el cambio anterior).
+
 Fuera de v1: más de un salto en una sola llamada (`rel` sobre `rel`), funciones definidas por el usuario, `let`, compatibilidad con fórmulas de Notion.
 
 ## 3. Modelo de datos
