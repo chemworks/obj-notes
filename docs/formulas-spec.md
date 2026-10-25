@@ -54,7 +54,10 @@ Fuera de v1: más de un salto en una sola llamada (`rel` sobre `rel`), funciones
 - El objeto-relación (en Anytype cada propiedad es un objeto) suma dos detalles:
   - `relationFormula`: el texto de la fórmula, guardado con **claves internas** de relación y no con nombres. Así, renombrar "Horas" no rompe nada. El editor muestra los nombres.
   - `relationFormulaResultFormat`: `number | shorttext | date | checkbox | object`. Lo infiere el chequeo de tipos de `expr` y le dice al middleware cómo ordenar y filtrar, y al cliente cómo mostrar.
-- El resultado se guarda en el objeto como un detalle **local**, que no viaja en los cambios sincronizados ni en el historial. [Cierto] El middleware ya hace eso con valores derivados, como backlinks (`core/block/editor/smartblock/links.go`, `updateBackLinks`) y `injectDerivedDetails` (`detailsinject.go`). [Probable] Hay que comprobar que admite claves locales definidas por el usuario y no solo las del bundle (`bundle.LocalRelationsKeys`). Ese es el primer spike técnico.
+- El resultado se guarda en el objeto como un detalle **local**, que no viaja en los cambios sincronizados ni en el historial. [Cierto] El middleware ya hace eso con valores derivados, como backlinks (`core/block/editor/smartblock/links.go`, `updateBackLinks`) y `injectDerivedDetails` (`detailsinject.go`).
+- **Spike del 2026-10-25, resultado:** [Cierto] `State.SetLocalDetail` acepta cualquier clave, incluida una de relación creada por el usuario. El valor aparece en `CombinedDetails()`, que es lo que guarda el indexador (`DocInfo.Details` en `smartblock.go`). No genera cambios `DetailsSet`, porque `makeDetailsChanges` solo mira los detalles sincronizados. Test: `core/block/editor/state/formula_spike_test.go` en la rama `GO-0000-obj-notes-formula-spike` de `chemworks/anytype-heart`.
+- [Cierto] Al recargar un objeto, `injectLocalDetails` solo recupera del índice las claves del bundle (`bundle.LocalAndDerivedRelationKeys`). Las fórmulas se recalculan al abrir el objeto, así que no hace falta recuperarlas. Si eso resulta lento, se agrega la lista de claves de fórmula a esa recuperación.
+- [Probable] Para recalcular objetos dependientes sin abrirlos existe `spaceIndex.UpdatePendingLocalDetails`, que ya usan las colecciones.
 - Motivo: un valor derivado no debería generar cambios ni conflictos cuando un día vuelva la sync.
 
 ## 4. Cuándo se recalcula
@@ -105,11 +108,11 @@ Fuera de v1: más de un salto en una sola llamada (`rel` sobre `rel`), funciones
 
 | paso | qué | tamaño [Suposición] |
 | --- | --- | --- |
-| 0 | Compilar y correr los dos repos en LocalOnly | 1 a 3 días |
-| 1 | Spike: guardar un detalle local calculado para una relación de usuario | 2 a 3 días; si falla, cambia el modelo de la sección 3 |
+| 0 | Compilar y correr los dos repos | **hecho 2026-10-25**, ver `docs/dev-setup.md` |
+| 1 | Spike: guardar un detalle local calculado para una relación de usuario | **hecho 2026-10-25, funciona** |
 | 2 | Formato y protobuf, `core/formula` con `prop()` y validación | 1 a 2 semanas |
 | 3 | `rel()` y agregados, recálculo de dependientes, ciclos | 1 a 2 semanas |
 | 4 | UI en el cliente: menú, editor, celda | 1 semana |
 | 5 | Orden y filtro por fórmula, pruebas de la sección 7 | 3 a 5 días |
 
-Total: unas 4 a 6 semanas. El riesgo principal está en el paso 1.
+Total restante: unas 3 a 5 semanas [Suposición]. El riesgo del paso 1 ya está despejado; ahora el mayor riesgo es el recálculo de dependientes (paso 3).
