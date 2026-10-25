@@ -21,14 +21,14 @@ En una tabla de Tipo **Proyecto** que tiene una propiedad **Tareas** (objetos de
 
 ```
 prop("Precio") * prop("Cantidad")
-if(prop("Estado") == "Hecho", "OK", "Pendiente")
+prop("Estado") == "Hecho" ? "OK" : "Pendiente"
 dateBetween(now(), prop("Vence"), "days")
 
-count(prop("Tareas"))                              // cuántas tareas linkeadas
+len(prop("Tareas"))                                // cuántas tareas linkeadas
 sum(rel("Tareas", "Horas"))                        // suma de Horas de esas tareas
 avg(rel("Tareas", "Avance"))
 max(rel("Tareas", "Vence"))                        // fecha más lejana
-count(filter(rel("Tareas", "Estado"), # == "Hecho"))
+count(rel("Tareas", "Estado"), # == "Hecho")
 join(rel("Tareas", "Nombre"), ", ")
 ```
 
@@ -39,11 +39,12 @@ join(rel("Tareas", "Nombre"), ", ")
 ### Funciones v1
 
 - Operadores: `+ - * / % ** == != < <= > >= and or not`, y `??` para valores vacíos.
-- Lógica: `if(c, a, b)`, `empty(x)`.
+- Lógica: `c ? a : b` (en `expr`, `if` es palabra reservada, no una función), `empty(x)`.
 - Texto: `concat`, `length`, `lower`, `upper`, `contains`, `replace`, `format`.
 - Números: `round(x, n)`, `abs`, `floor`, `ceil`, `toNumber`.
 - Fechas: `now()`, `dateAdd(d, n, unidad)`, `dateBetween(a, b, unidad)`, `formatDate(d, patrón)`.
-- Listas y relaciones: `rel`, `count`, `sum`, `avg`, `min`, `max`, `first`, `last`, `join`, `filter`, `map`, `unique`.
+- Listas y relaciones: `rel`, `len`, `count(lista, condición)`, `sum`, `avg`, `min`, `max`, `earliest`, `latest`, `first`, `last`, `join`, `filter`, `map`, `uniq`.
+- Implementado el 2026-10-25 en `core/formula` (rama `GO-0000-obj-notes-formula-engine` de `chemworks/anytype-heart`), con tests de cada función.
 
 Fuera de v1: más de un salto en una sola llamada (`rel` sobre `rel`), funciones definidas por el usuario, `let`, compatibilidad con fórmulas de Notion.
 
@@ -110,7 +111,7 @@ Fuera de v1: más de un salto en una sola llamada (`rel` sobre `rel`), funciones
 | --- | --- | --- |
 | 0 | Compilar y correr los dos repos | **hecho 2026-10-25**, ver `docs/dev-setup.md` |
 | 1 | Spike: guardar un detalle local calculado para una relación de usuario | **hecho 2026-10-25, funciona** |
-| 2 | Formato y protobuf, `core/formula` con `prop()` y validación | 1 a 2 semanas |
+| 2 | Formato y protobuf, `core/formula` con `prop()` y validación | **hecho 2026-10-25**: motor, `rel()`, ciclos, `RelationFormat_formula = 200`, relaciones `relationFormula` y `relationFormulaResultFormat` |
 | 3 | `rel()` y agregados, recálculo de dependientes, ciclos | 1 a 2 semanas |
 | 4 | UI en el cliente: menú, editor, celda | 1 semana |
 | 5 | Orden y filtro por fórmula, pruebas de la sección 7 | 3 a 5 días |
