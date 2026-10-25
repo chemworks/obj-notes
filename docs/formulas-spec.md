@@ -112,7 +112,7 @@ Fuera de v1: más de un salto en una sola llamada (`rel` sobre `rel`), funciones
 | 0 | Compilar y correr los dos repos | **hecho 2026-10-25**, ver `docs/dev-setup.md` |
 | 1 | Spike: guardar un detalle local calculado para una relación de usuario | **hecho 2026-10-25, funciona** |
 | 2 | Formato y protobuf, `core/formula` con `prop()` y validación | **hecho 2026-10-25**: motor, `rel()`, ciclos, `RelationFormat_formula = 200`, relaciones `relationFormula` y `relationFormulaResultFormat` |
-| 3 | `rel()` y agregados, recálculo de dependientes, ciclos | 1 a 2 semanas |
+| 3 | `rel()` y agregados, recálculo de dependientes, ciclos | **hecho 2026-10-25**: `formula.Compute` en la inyección de detalles del smartblock + `formulawatcher` (objetos cerrados se actualizan en el índice, abiertos re-inyectan). Pendiente: guardar errores para mostrarlos, valores viejos si una fórmula deja de serlo, medir rendimiento |
 | 4 | UI en el cliente: menú, editor, celda | 1 semana |
 | 5 | Orden y filtro por fórmula, pruebas de la sección 7 | 3 a 5 días |
 
