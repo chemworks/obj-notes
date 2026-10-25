@@ -47,6 +47,7 @@ join(rel("Tareas", "Nombre"), ", ")
 - Implementado el 2026-10-25 en `core/formula` (rama `GO-0000-obj-notes-formula-engine` de `chemworks/anytype-heart`), con tests de cada función.
 
 - `children("Relación", "Propiedad")` (agregada 2026-10-25): lee la propiedad de los objetos cuya Relación apunta a este objeto. Así un Proyecto suma las Tareas que tienen Proyecto = él, sin cargar una lista en el proyecto. Excluye archivados. Una sola consulta al índice: 3,2 ms para 1.000 tareas, contra 11 ms por fórmula con `rel()`. Si una tarea se mueve de proyecto, se recalculan el proyecto viejo y el nuevo (el viejo solo mientras el middleware siga corriendo desde el cambio anterior).
+- Pegar desde Excel (agregado 2026-10-25, rama `obj-notes-formula-ui`): en la tabla, botón Nuevo → "Pegar filas". Lee el texto separado por tabulaciones, une cada encabezado con una propiedad por nombre y usa la columna "Código" como clave. Si el código ya existe en ese tipo, actualiza la fila; si no, la crea con los valores por defecto de la vista (por ejemplo Proyecto = el actual). Las celdas vacías no borran nada, las opciones de select que faltan se crean, y se ignoran las columnas de objeto, archivo, fórmula o sin propiedad. Límites: la propiedad Código tiene que existir antes, y la búsqueda del código es en todo el tipo, no solo en el proyecto.
 
 Fuera de v1: más de un salto en una sola llamada (`rel` sobre `rel`), funciones definidas por el usuario, `let`, compatibilidad con fórmulas de Notion.
 
