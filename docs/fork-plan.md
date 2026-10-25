@@ -73,6 +73,16 @@ Recomendación: calcular en el **middleware (Go)** y guardar el resultado como u
 
 Total hasta etapa 4: unas 5 a 8 semanas para una persona con ayuda de IA [Suposición]. El riesgo mayor no es la fórmula sino aprender las dos bases de código.
 
+## Fork vs proponer la mejora a Anytype (evaluado 2026-10-25)
+
+- [Cierto] Aceptan PRs externos contra la rama `develop`. Las revisa el equipo y hay que firmar un CLA, que corre como bot en los dos repos (`.github/workflows/cla.yml`). Las ideas de features se piden como issue o en el foro. Fuente: https://github.com/anyproto/.github/blob/main/docs/CONTRIBUTING.md
+- [Cierto] El pedido de fórmulas existe hace años en el foro ("Derived Relations (Formulas)", https://community.anytype.io/t/derived-relations-formulas/1554) y todavía no se implementó. [Probable] No encontré respuesta del equipo con fecha ni plan en la página revisada.
+- [Probable] Una propiedad nueva cambia el protobuf y obliga a que la soporten también iOS, Android y la sync. Es una decisión de producto del equipo de Anytype, no un PR que se mergea solo. Un PR grande sin acuerdo previo tiene pocas chances.
+- [Probable] Si lo aceptan, se ahorra el costo de mantener el fork y funciona en móvil y con sync. Si no, no se ahorra nada y el control del cronograma queda en manos de ellos.
+- [Cierto] Con el CLA, el código que aportes queda bajo las condiciones que defina Any.
+
+Recomendación: **híbrido**. Construir en el fork, con el cambio aislado y en ramas sobre `develop`. En paralelo, abrir una discusión con el diseño (formato, lenguaje, dónde se calcula) para ver si lo quieren. Si dicen que sí, se manda como PR y el fork queda para lo que no acepten. No conviene esperar a que ellos lo construyan.
+
 ## Decisiones abiertas
 
 - Si la etapa 1 (prototipo en cliente) vale la pena o se va directo a la etapa 2.
