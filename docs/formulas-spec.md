@@ -103,7 +103,17 @@ Fuera de v1: más de un salto en una sola llamada (`rel` sobre `rel`), funciones
 3. Ordenar la tabla de Proyectos por esa fórmula funciona.
 4. Renombrar "Horas" a "Hs" no rompe la fórmula.
 5. Fórmula A usa B y B usa A: no deja guardar.
-6. 1.000 tareas en 50 proyectos: cambiar una tarea actualiza su proyecto en menos de 200 ms [Suposición: meta, no medido].
+6. 1.000 tareas en 50 proyectos: cambiar una tarea actualiza su proyecto en menos de 200 ms. **Medido 2026-10-25** (`core/formula/formulawatcher/bench_test.go`, objetos cerrados, índice SQLite real, sin contar la espera de agrupado de 200 ms):
+
+   | caso | tiempo |
+   | --- | --- |
+   | cambiar una tarea, 50 proyectos × 20 tareas | 0,85 ms |
+   | cambiar una tarea, 1 proyecto × 1.000 tareas | 32 ms |
+   | editar una fórmula, 50 proyectos | 34 ms |
+   | editar una fórmula, 1.000 tareas | 36 ms |
+   | recompilar las fórmulas del espacio | 0,3 ms |
+
+   El 90 % del tiempo de `Compute` en el proyecto de 1.000 tareas es `GetDetails` de cada tarea relacionada: una lectura SQLite por objeto, y dos veces si dos fórmulas leen la misma relación. La optimización que corresponde es leer los relacionados en lote y una sola vez por cálculo. El multihilo no hace falta por ahora.
 
 ## 8. Orden de trabajo y tamaño
 
