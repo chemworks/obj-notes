@@ -57,3 +57,9 @@ Levanta el middleware compilado en el paso 1, un proxy gRPC-web y Vite. Verifica
 ## 4. Escritorio (en tu máquina)
 
 En una máquina con acceso normal a internet, `bun install` recompila `keytar` sin problemas y `bun run start:dev` abre la app Electron.
+
+## 4. Gotchas del modo web (2026-10-25)
+
+- Abrí la URL completa que imprime `start-web.js` (`http://127.0.0.1:3030/?server=…&dataPath=…`). Sin `dataPath` la creación de cuenta falla con "failed to create local repo", y después el helper responde "initial parameters already set" hasta reiniciarlo.
+- `bun run typecheck` se queda sin memoria con el heap por defecto. Usá `NODE_OPTIONS=--max-old-space-size=8192 bunx tsc --noEmit -p tsconfig.json`.
+- La primera vez que se abre una tabla de Tipo aparece un aviso con botón "Ok" que tapa el `+` de columnas.
