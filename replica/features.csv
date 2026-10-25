@@ -5,10 +5,9 @@ Objetos con Tipo y propiedades tipadas,objetos,must,Anytype,no,texto número fec
 Gestor de Tipos (crear editar borrar),objetos,must,Anytype,no,
 Vista tabla por Tipo con filtros y orden,vistas,must,Anytype+Notion,no,
 Columnas de fórmula (aritmética if texto fechas prop()),fórmulas,must,Notion,no,subconjunto propio no compatible con Notion
-Bloque de audio: grabar guardar reproducir,audio,must,Logseq,no,MediaRecorder en navegador
 Almacenamiento local en un dispositivo,datos,must,Anytype,no,sin sync
 Buscador rápido por título (Ctrl+K),navegación,must,todos,no,
-Links [[objeto]] y backlinks,links,should,Logseq+Anytype,no,
+Links [[objeto]] y backlinks,links,must,Logseq+Anytype,no,
 Diario del día,diario,should,Logseq,no,
 Export a Markdown,datos,should,Anytype+Logseq,no,
 Cambiar el Tipo de un objeto conservando propiedades,objetos,should,Anytype,no,
@@ -16,12 +15,13 @@ Colecciones manuales,vistas,should,Anytype,no,
 Mensajes de error de fórmula claros,fórmulas,should,Notion,no,
 Vista kanban,vistas,could,Notion+Anytype,no,
 Vista galería y calendario,vistas,could,Notion+Anytype,no,
-Relaciones y rollups entre tablas,fórmulas,could,Notion,no,
+Relaciones y rollups entre tablas,fórmulas,must,Notion,no,tablas genéricas que se consultan entre sí
 Fórmulas sobre listas (map filter let),fórmulas,could,Notion,no,
+Bloque de audio: grabar guardar reproducir,audio,could,Logseq,no,para más adelante
 Transcripción de audio a texto como bloques hijos,audio,could,Logseq,no,
 Templates por Tipo,objetos,could,Anytype,no,
-Grafo visual,links,could,Logseq+Anytype,no,
-Sync multi-dispositivo cifrada,datos,could,Anytype,no,sube el tamaño a L
+Grafo visual,links,must,Logseq+Anytype,no,
+Sync multi-dispositivo cifrada,datos,could,Anytype,no,descartado por ahora; sube el tamaño a L
 Import desde Notion Anytype Logseq,datos,could,todos,no,
 Marketplace de plantillas e integraciones,ecosistema,could,Notion,skip,es la comunidad de Notion no el producto
 Red de sync any-sync como servicio,datos,could,Anytype,skip,se puede construir sync propio no usar su red

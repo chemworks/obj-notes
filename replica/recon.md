@@ -1,6 +1,6 @@
 # Recon map: Obj_notes (web / desktop, local-first)
 
-Alcance: un MVP chico que mezcla lo central de tres apps: el modelo de objetos y tipos de Anytype, las páginas de bloques y las tablas con fórmulas de Notion, y la escritura en outline con grabación de audio de Logseq.
+Alcance: un MVP chico que mezcla lo central de tres apps: el modelo de objetos y tipos de Anytype, las páginas de bloques y las tablas con fórmulas de Notion, y la escritura en outline con backlinks de Logseq. El audio queda para una etapa posterior.
 Para: uso personal de Fabricio (un solo usuario, un solo dispositivo). Producto vendible queda para después.
 Fecha: 2026-10-25
 
@@ -11,7 +11,7 @@ Etiquetas de confianza: **[Cierto]** verificado en una fuente pública enlazada 
 - [Suposición] "Un clon de Anytype con todas las funcionalidades de Notion" es un proyecto XL: son dos productos con equipos de decenas de personas y años de trabajo. Si el objetivo sigue siendo "todo", el proyecto no termina. Este documento corta a propósito.
 - [Probable] Lo más caro de Anytype no es la UI sino la sincronización local-first cifrada entre dispositivos (CRDTs, red P2P). El MVP la deja **afuera**: datos locales en un solo dispositivo, con export. Meter sync desde el día uno multiplica el tamaño.
 - [Probable] Las fórmulas tipo Notion 2.0 son un lenguaje de programación chico (parser, tipos, listas, `let`). El MVP implementa un subconjunto; no apunta a compatibilidad con Notion.
-- [Cierto] La grabación de audio de Logseq es una función de la app móvil (iOS y Android), con transcripción automática como bloques hijos. La transcripción queda fuera del MVP; la grabación sí entra.
+- [Cierto] La grabación de audio de Logseq es una función de la app móvil (iOS y Android), con transcripción automática como bloques hijos. El audio completo (grabación y transcripción) queda para después del MVP, por decisión del 2026-10-25.
 
 ## Fuentes
 
@@ -48,7 +48,7 @@ No se usó ninguna cuenta, ni código fuente, ni APIs privadas. Solo docs públi
 
 ## Core loop
 
-[Suposición] Abrir la app, escribir en una página de bloques (o en el diario del día), convertir cosas en objetos con tipo (una Tarea, una Persona, un Libro), y verlas juntas en una tabla con columnas calculadas por fórmulas. Grabar una nota de voz dentro de la página cuando escribir no conviene.
+[Suposición] Abrir la app, escribir en una página de bloques (o en el diario del día), convertir cosas en objetos con tipo (una Tarea, una Persona, un Libro), y verlas juntas en una tabla con columnas calculadas por fórmulas. Relacionar tablas entre sí y navegar por backlinks y grafo.
 
 ## MVP: lo que entra
 
@@ -58,8 +58,8 @@ No se usó ninguna cuenta, ni código fuente, ni APIs privadas. Solo docs públi
 | 2 | Objetos con Tipo: cada página es un objeto; Tipos definidos por el usuario con propiedades (texto, número, fecha, checkbox, select, link a objeto) | Anytype | es lo que diferencia de un editor de notas común |
 | 3 | Vista tabla por Tipo (query automática) con filtros y orden simples | Anytype + Notion | ver los objetos juntos |
 | 4 | Columnas de fórmula en tablas: aritmética, comparación, `if`, texto, fechas, `prop("X")`, unas 20 funciones | Notion | pedido explícito |
-| 5 | Bloque de audio: grabar desde el micrófono, guardar archivo local, reproducir | Logseq | pedido explícito |
-| 6 | Links `[[objeto]]` y backlinks | Logseq + Anytype | convierte notas sueltas en grafo |
+| 5 | Relaciones entre tablas: una propiedad apunta a objetos de otro Tipo y las fórmulas leen sus valores (estilo rollup) | Notion + Anytype | decisión 2026-10-25: tablas genéricas que se consultan entre sí |
+| 6 | Links `[[objeto]]`, backlinks y grafo visual | Logseq + Anytype | decisión 2026-10-25: backlinks y grafo entran |
 | 7 | Diario del día (una página por fecha, se abre al iniciar) | Logseq | barato y es el punto de entrada diario |
 | 8 | Sidebar con tipos y páginas, búsqueda rápida por título | todos | navegación mínima |
 | 9 | Almacenamiento local (un archivo o base local) + export a Markdown | Anytype | local-first sin sync |
@@ -68,9 +68,9 @@ No se usó ninguna cuenta, ni código fuente, ni APIs privadas. Solo docs públi
 
 - Sincronización multi-dispositivo, P2P, cifrado de extremo a extremo, colaboración en tiempo real.
 - Cuentas, login, compartir, permisos, comentarios, publicar sitios.
-- Vistas kanban, galería, calendario, timeline, grafo visual (vienen después; la tabla primero).
-- Relaciones con rollups entre tablas, fórmulas sobre listas (`map`/`filter`), `let`, compatibilidad con fórmulas de Notion.
-- Transcripción de audio a texto.
+- Vistas kanban, galería, calendario, timeline (vienen después; la tabla primero).
+- Fórmulas sobre listas más allá de lo que piden las relaciones, `let`, compatibilidad con fórmulas de Notion.
+- Bloque de audio y transcripción (decisión 2026-10-25: para más adelante).
 - Templates por tipo, historial de versiones, papelera con restauración.
 - Import desde Notion/Anytype/Logseq, API pública, plugins, IA.
 - Apps móviles nativas (el MVP es web/desktop; [Suposición] el micrófono funciona igual en el navegador).
@@ -92,7 +92,7 @@ No se usó ninguna cuenta, ni código fuente, ni APIs privadas. Solo docs públi
 | S04 | Gestor de Tipos | sidebar > Tipos | crear y editar tipos | lista, editor de propiedades | sin tipos propios, lleno |
 | S05 | Vista tabla de un Tipo | sidebar > un tipo | ver objetos juntos | tabla, filtros, orden, celda editable | vacío, lleno, error de fórmula |
 | S06 | Editor de fórmula | encabezado de columna fórmula | escribir fórmula | input con resaltado y error | válido, error |
-| S07 | Bloque de audio | `/audio` en S02 | grabar y reproducir | botón grabar, timer, player | permiso denegado, grabando, guardado |
+| S07 | Grafo | sidebar > Grafo | ver objetos y links | canvas de nodos, filtro por tipo | vacío, lleno |
 | S08 | Buscador rápido | Ctrl+K | saltar a un objeto | input, resultados | sin resultados |
 
 ## Flujos
@@ -112,10 +112,10 @@ F03 Agregar una columna de fórmula
     clicks: ~3
     edge: error de sintaxis, referencia a propiedad inexistente, división por cero, ciclos
 
-F04 Grabar una nota de voz
-    S02 -> /audio -> grabar -> parar -> reproducir
-    clicks: 3
-    edge: el navegador niega el micrófono, grabación larga, cerrar la página grabando
+F04 Relacionar dos tablas
+    S04 en el Tipo A agregar propiedad "link a objeto" de Tipo B -> S05 elegir objetos B en la celda
+    -> S06 fórmula que lee una propiedad de los B relacionados (suma, conteo)
+    edge: borrar un objeto B relacionado, ciclos de fórmulas entre tablas
 
 F05 Linkear y volver
     S02 escribir [[ -> elegir objeto -> abrir -> ver backlinks
@@ -155,17 +155,29 @@ Relaciones: Type 1-n Object, Type n-n Property, Object 1-n Block, Block 1-n Bloc
 
 ## Feature matrix
 
-Ver `features.csv`. Must: 9, should: 6, could: 9, skip: 3.
+Ver `features.csv`. Must: 11, should: 5, could: 8, skip: 3.
+
+## Opción: partir de un fork de Anytype (evaluada 2026-10-25)
+
+- [Cierto] El cliente de escritorio `anytype-ts` usa la "Any Source Available License 1.0", que no es una licencia open source: permite usar, modificar y redistribuir, pero el uso comercial solo se permite "for Non-Commercial Use, or for Commercial Use in Allowed Networks" (redes autorizadas por Any Association). Fuentes: https://cdn.jsdelivr.net/gh/anyproto/anytype-ts@develop/README.md y https://scancode-licensedb.aboutcode.org/asal-1.0.html
+- [Cierto] `any-sync` (el protocolo de sync) es MIT: https://pkg.go.dev/github.com/anyproto/any-sync@v0.9.4
+- [Probable] El middleware `anytype-heart` (Go) tiene la misma licencia que el cliente. Hay que confirmarlo en su LICENSE antes de forkear.
+- [Cierto] El cliente depende del middleware en Go por protobuf; para cambiar cómo se guardan y calculan las propiedades hay que tocar los dos (README de anytype-ts).
+- [Probable] Anytype ya trae objetos, tipos, relaciones, vistas, backlinks y grafo. Lo que habría que agregar: la propiedad de fórmula y los valores que leen de objetos relacionados (rollups).
+
+Conclusión: para uso personal el fork ahorra la mayor parte del MVP. Si algún día se quiere vender o distribuir comercialmente, el fork es un bloqueo legal y conviene código propio. En ese caso el método clean-room de `replica-*` sigue aplicando; con fork, no.
 
 ## Tamaño
 
-Pantallas 8, flujos 5, entidades 6.
+Pantallas 8, flujos 5, entidades 6 (Attachment queda para cuando entre el audio).
 
 Partes difíciles:
 1. [Probable] El editor de bloques con outline (selección, foco, sangría, pegar texto). Conviene usar una librería de editor abierta en vez de escribirlo de cero.
 2. [Probable] El motor de fórmulas: parser, tipos, mensajes de error y recálculo cuando cambia una celda.
 3. [Probable] Que el almacenamiento local quede listo para sumar sync después sin rehacer el modelo.
 
-Tamaño: **M** [Suposición]: unas 4 a 8 semanas para una persona con ayuda de IA, si el alcance se mantiene. Con sync multi-dispositivo pasa a **L**; con "todo Notion" pasa a **XL**.
+Tamaño desde cero: **M** [Suposición], unas 4 a 8 semanas para una persona con ayuda de IA si el alcance se mantiene. Con sync multi-dispositivo pasa a **L**; con "todo Notion" pasa a **XL**.
+
+Tamaño con fork de Anytype: **S-M** [Suposición]. El trabajo nuevo es el motor de fórmulas y los rollups, pero hay que aprender dos bases de código grandes (TypeScript + Go) y mantener el fork al día con upstream.
 
 Siguiente paso: `/replica-architect` para elegir stack y esquema.
